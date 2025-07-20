@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hard-Coded Excel Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <style>
+    html, body { margin:0; padding:0; width:100%; height:100%; }
+    table {
+      border-collapse: collapse;
+      width:100%; height:100%;
+      table-layout: fixed;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+    }
+    th, td {
+      border:1px solid #555; text-align:center; padding:4px; word-wrap:break-word;
+    }
+    .top-date { background:#9bc2e6; font-size:18px; font-weight:bold; }
+    thead th { background:#b00004; color:#fff; }
+    .subheader { background:#00ccff; color:#fff; }
+    .ore { background:#002060; color:#fff; }
+    .section-header { background:#eff2f8; }
+    .section-header2 { background:#d0d7eb; }
+    .grey-row { background:#d3d3d3; }
+    .light-blue { background:#E0FFFF; }
+    .full-width { background:#d0d7eb; }
+    .no-border td { border:none; }
+  </style>
+</head>
+<body>
+  <table>
+    <thead>
+      <tr>
+        <tr class="no-border">
+        <!-- Exit button -->
+        <td colspan="3" style="padding:0 10px; background: #9bc2e6; text-align:left;">
+          <button 
+            style="font-size:22px; cursor:pointer; border: none; background: #9bc2e6; font-weight: bold;" 
+            onclick="window.location.href='Dashboard/index.html'">
+            ↩
+          </button>
+        </td>
+      
+        <!-- Date centered -->
+        <td class="top-date" id="Date" colspan="6" style="text-align:center;">
+          [Date]
+        </td>
+      
+        <!-- HCL text on the right -->
+        <td colspan="3" style="padding:0 8px; font-size:20px; text-align:right; font-weight:bold; color:#fff; background:#9bc2e6; color: #b00004;">
+          Hindustan Copper Limited
+        </td>
+      </tr>
+
+      </tr>
+      <tr>
+        <th>PRODUCT</th>
+        <th>UNIT</th>
+        <th>Monthly Target</th>
+        <th>Daily Target</th>
+        <th>Actual Achieved</th>
+        <th>As on date Target For <span id="Month1">[Month]</span></th>
+        <th>% Achvd till date For <span id="Month2">[Month]</span></th>
+        <th>Cumm. till Date For <span id="Month3">[Month]</span></th>
+        <th>Cumm. for FY <span id="Year1">[Year1]</span></th>
+        <th>Target for FY <span id="Year1">[Year1]</span></th>
+        <th>Total for FY <span id="Year2">[Year2]</span></th>
+        <th>Qtr-1 (FY <span id="Year2">[Year2]</span>)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="subheader">
+        <td colspan="12"><span style="font-weight:800;" id="ProdDate">[Date]</span></td>
+      </tr>
+
+      <!-- ORE Block -->
+      <tr>
+        <td class="ore" rowspan="3">ORE (MT)</td><td class="section-header">MCP</td>
+        <td class="section-header" id="ORE_MCP_MonthlyTarget">[Val]</td>
+        <td class="section-header" id="ORE_MCP_DailyTarget">[Val]</td>
+        <td class="section-header" id="ORE_MCP_Actual">[Val]</td>
+        <td class="section-header" id="ORE_MCP_AsOnTarget">[Val]</td>
+        <td class="section-header" id="ORE_MCP_PctAchvd">[Val]</td>
+        <td class="section-header" id="ORE_MCP_CummMonth">[Val]</td>
+        <td class="section-header" id="ORE_MCP_CummFY">[Val]</td>
+        <td class="section-header" id="ORE_MCP_TargetFY">[Val]</td>
+        <td class="section-header" id="ORE_MCP_TotalFY">[Val]</td>
+        <td class="section-header" id="ORE_MCP_Qtr1">[Val]</td>
+      </tr>
+      <tr>
+        <td class="section-header2" >KCC</td>
+        <td class="section-header2" id="ORE_KCC_MonthlyTarget">[Val]</td>
+        <td class="section-header2" id="ORE_KCC_DailyTarget">[Val]</td>
+        <td class="section-header2" id="ORE_KCC_Actual">[Val]</td>
+        <td class="section-header2" id="ORE_KCC_AsOnTarget">[Val]</td>
+        <td class="section-header2" id="ORE_KCC_PctAchvd">[Val]</td>
+        <td class="section-header2" id="ORE_KCC_CummMonth">[Val]</td>
+        <td class="section-header2" id="ORE_KCC_CummFY">[Val]</td>
+        <td class="section-header2" id="ORE_KCC_TargetFY">[Val]</td>
+        <td class="section-header2" id="ORE_KCC_TotalFY">[Val]</td>
+        <td class="section-header2" id="ORE_KCC_Qtr1">[Val]</td>
+      </tr>
+      <tr>
+        <td class="section-header" >ICC</td>
+        <td class="section-header" id="ORE_ICC_MonthlyTarget">[Val]</td>
+        <td class="section-header" id="ORE_ICC_DailyTarget">[Val]</td>
+        <td class="section-header" id="ORE_ICC_Actual">[Val]</td>
+        <td class="section-header" id="ORE_ICC_AsOnTarget">[Val]</td>
+        <td class="section-header" id="ORE_ICC_PctAchvd">[Val]</td>
+        <td class="section-header" id="ORE_ICC_CummMonth">[Val]</td>
+        <td class="section-header" id="ORE_ICC_CummFY">[Val]</td>
+        <td class="section-header" id="ORE_ICC_TargetFY">[Val]</td>
+        <td class="section-header" id="ORE_ICC_TotalFY">[Val]</td>
+        <td class="section-header" id="ORE_ICC_Qtr1">[Val]</td>
+      </tr>
+      <tr class="grey-row">
+        <td></td>
+        <td>TOTAL</td>
+        <td id="ORE_Total_MonthlyTarget">[Val]</td>
+        <td id="ORE_Total_DailyTarget">[Val]</td>
+        <td id="ORE_Total_Actual">[Val]</td>
+        <td id="ORE_Total_AsOnTarget">[Val]</td>
+        <td id="ORE_Total_PctAchvd">[Val]</td>
+        <td id="ORE_Total_CummMonth">[Val]</td>
+        <td id="ORE_Total_CummFY">[Val]</td>
+        <td id="ORE_Total_TargetFY">[Val]</td>
+        <td id="ORE_Total_TotalFY">[Val]</td>
+        <td id="ORE_Total_Qtr1">[Val]</td>
+      </tr>
+
+      <!-- MIC Block -->
+      <tr class="section-header">
+        <td class="ore" rowspan="3">MIC (MT)</td><td>MCP</td>
+        <td id="MIC_MCP_MonthlyTarget">[Val]</td>
+        <td id="MIC_MCP_DailyTarget">[Val]</td>
+        <td id="MIC_MCP_Actual">[Val]</td>
+        <td id="MIC_MCP_AsOnTarget">[Val]</td>
+        <td id="MIC_MCP_PctAchvd">[Val]</td>
+        <td id="MIC_MCP_CummMonth">[Val]</td>
+        <td id="MIC_MCP_CummFY">[Val]</td>
+        <td id="MIC_MCP_TargetFY">[Val]</td>
+        <td id="MIC_MCP_TotalFY">[Val]</td>
+        <td id="MIC_MCP_Qtr1">[Val]</td>
+      </tr>
+      <tr>
+        <td class="section-header2" >KCC</td>
+        <td class="section-header2" id="MIC_KCC_MonthlyTarget">[Val]</td>
+        <td class="section-header2" id="MIC_KCC_DailyTarget">[Val]</td>
+        <td class="section-header2" id="MIC_KCC_Actual">[Val]</td>
+        <td class="section-header2" id="MIC_KCC_AsOnTarget">[Val]</td>
+        <td class="section-header2" id="MIC_KCC_PctAchvd">[Val]</td>
+        <td class="section-header2" id="MIC_KCC_CummMonth">[Val]</td>
+        <td class="section-header2" id="MIC_KCC_CummFY">[Val]</td>
+        <td class="section-header2" id="MIC_KCC_TargetFY">[Val]</td>
+        <td class="section-header2" id="MIC_KCC_TotalFY">[Val]</td>
+        <td class="section-header2" id="MIC_KCC_Qtr1">[Val]</td>
+      </tr>
+      <tr>
+        <td class="section-header" >ICC</td>
+        <td class="section-header" id="MIC_ICC_MonthlyTarget">[Val]</td>
+        <td class="section-header" id="MIC_ICC_DailyTarget">[Val]</td>
+        <td class="section-header" id="MIC_ICC_Actual">[Val]</td>
+        <td class="section-header" id="MIC_ICC_AsOnTarget">[Val]</td>
+        <td class="section-header" id="MIC_ICC_PctAchvd">[Val]</td>
+        <td class="section-header" id="MIC_ICC_CummMonth">[Val]</td>
+        <td class="section-header" id="MIC_ICC_CummFY">[Val]</td>
+        <td class="section-header" id="MIC_ICC_TargetFY">[Val]</td>
+        <td class="section-header" id="MIC_ICC_TotalFY">[Val]</td>
+        <td class="section-header" id="MIC_ICC_Qtr1">[Val]</td>
+      </tr>
+      <tr class="grey-row">
+        <td></td>
+        <td>TOTAL</td>
+        <td id="MIC_Total_MonthlyTarget">[Val]</td>
+        <td id="MIC_Total_DailyTarget">[Val]</td>
+        <td id="MIC_Total_Actual">[Val]</td>
+        <td id="MIC_Total_AsOnTarget">[Val]</td>
+        <td id="MIC_Total_PctAchvd">[Val]</td>
+        <td id="MIC_Total_CummMonth">[Val]</td>
+        <td id="MIC_Total_CummFY">[Val]</td>
+        <td id="MIC_Total_TargetFY">[Val]</td>
+        <td id="MIC_Total_TotalFY">[Val]</td>
+        <td id="MIC_Total_Qtr1">[Val]</td>
+      </tr>
+
+      <!-- CCR & Paste -->
+      <tr class="section-header">
+        <td class="ore">CCR (MT)</td><td>TCP</td>
+        <td id="CCR_TCP_MonthlyTarget">[Val]</td>
+        <td id="CCR_TCP_DailyTarget">[Val]</td>
+        <td id="CCR_TCP_Actual">[Val]</td>
+        <td id="CCR_TCP_AsOnTarget">[Val]</td>
+        <td id="CCR_TCP_PctAchvd">[Val]</td>
+        <td id="CCR_TCP_CummMonth">[Val]</td>
+        <td id="CCR_TCP_CummFY">[Val]</td>
+        <td id="CCR_TCP_TargetFY">[Val]</td>
+        <td id="CCR_TCP_TotalFY">[Val]</td>
+        <td id="CCR_TCP_Qtr1">[Val]</td>
+      </tr>
+      <tr>
+        <td class="ore" style="font-size: smaller; font-weight: bold;">PASTE FILL PLANT</td><td class="section-header2">MCP</td>
+        <td class="section-header2" id="PASTE_MCP_MonthlyTarget">[Val]</td>
+        <td class="section-header2" id="PASTE_MCP_DailyTarget">[Val]</td>
+        <td class="section-header2" id="PASTE_MCP_Actual">[Val]</td>
+        <td class="section-header2" id="PASTE_MCP_AsOnTarget">[Val]</td>
+        <td class="section-header2" id="PASTE_MCP_PctAchvd">[Val]</td>
+        <td class="section-header2" id="PASTE_MCP_CummMonth">[Val]</td>
+        <td class="section-header2" id="PASTE_MCP_CummFY">[Val]</td>
+        <td class="section-header2" id="PASTE_MCP_TargetFY">[Val]</td>
+        <td class="section-header2" id="PASTE_MCP_TotalFY">[Val]</td>
+        <td class="section-header2" id="PASTE_MCP_Qtr1">[Val]</td>
+      </tr>
+
+      <!-- Sales Subheader -->
+      <tr class="subheader">
+        <td colspan="12" style="font-weight:800;"><span id="SalesDate">[Date]</span></td>
+      </tr>
+      <tr class="light-blue">
+        <td class="ore" colspan="1">MIC (MT)</td>
+        <td class="section-header2" id="Sales_MIC_Val1">[Val]</td>
+        <td class="section-header2" id="Sales_MIC_Val2">[Val]</td>
+        <td class="section-header2" id="Sales_MIC_Val3">[Val]</td>
+        <td class="section-header2" id="Sales_MIC_Val4">[Val]</td>
+        <td class="section-header2" id="Sales_MIC_Val5">[Val]</td>
+        <td class="section-header2" id="Sales_MIC_Val6">[Val]</td>
+        <td class="section-header2" id="Sales_MIC_Val7">[Val]</td>
+        <td class="section-header2" id="Sales_MIC_Val8">[Val]</td>
+        <td class="section-header2" id="Sales_MIC_Val9">[Val]</td>
+        <td class="section-header2" id="Sales_MIC_Val10">[Val]</td>
+        <td class="section-header2" id="Sales_MIC_Val11">[Val]</td>
+      </tr>
+
+      <!-- LME / Ex. Rate / HCL Share -->
+      <tr class="subheader"><td colspan="12" style="font-weight:800;">LME, Ex. Rate &amp; HCL Share Price</td></tr>
+      <tr>
+        <td class="ore" colspan="2">LME Price ($/MT)</td>
+        <td class="section-header2" id="LME_Price_Val1">[Val]</td>
+        <td class="section-header2" id="LME_Price_Val2">[Val]</td>
+        <td class="section-header2" id="LME_Price_Val3">[Val]</td>
+        <td class="section-header2" id="LME_Price_Val4">[Val]</td>
+        <td class="section-header2" id="LME_Price_Val5">[Val]</td>
+        <td class="section-header2" id="LME_Price_Val6">[Val]</td>
+        <td class="section-header2" id="LME_Price_Val7">[Val]</td>
+        <td class="section-header2" id="LME_Price_Val8">[Val]</td>
+        <td class="section-header2" id="LME_Price_Val9">[Val]</td>
+        <td class="section-header2" id="LME_Price_Val10">[Val]</td>
+      </tr>
+      <tr>
+        <td class="ore" colspan="2">Ex. Rate (INR/$)</td>
+        <td class="section-header" id="ExRate_Val1">[Val]</td>
+        <td class="section-header" id="ExRate_Val2">[Val]</td>
+        <td class="section-header" id="ExRate_Val3">[Val]</td>
+        <td class="section-header" id="ExRate_Val4">[Val]</td>
+        <td class="section-header" id="ExRate_Val5">[Val]</td>
+        <td class="section-header" id="ExRate_Val6">[Val]</td>
+        <td class="section-header" id="ExRate_Val7">[Val]</td>
+        <td class="section-header" id="ExRate_Val8">[Val]</td>
+        <td class="section-header" id="ExRate_Val9">[Val]</td>
+        <td class="section-header" id="ExRate_Val10">[Val]</td>
+      </tr>
+      <tr>
+        <td class="ore" colspan="2">HCL Share (NSE) INR</td>
+        <td class="section-header2" id="HCL_Share_Val1">[Val]</td>
+        <td class="section-header2" id="HCL_Share_Val2">[Val]</td>
+        <td class="section-header2" id="HCL_Share_Val3">[Val]</td>
+        <td class="section-header2" id="HCL_Share_Val4">[Val]</td>
+        <td class="section-header2" id="HCL_Share_Val5">[Val]</td>
+        <td class="section-header2" id="HCL_Share_Val6">[Val]</td>
+        <td class="section-header2" id="HCL_Share_Val7">[Val]</td>
+        <td class="section-header2" id="HCL_Share_Val8">[Val]</td>
+        <td class="section-header2" id="HCL_Share_Val9">[Val]</td>
+        <td class="section-header2" id="HCL_Share_Val10">[Val]</td>
+      </tr>
+
+      <!-- Stock & Cathode -->
+      <tr class="full-width">
+        <td colspan="2" style="background:#002060; color:#fff;">Stock of MIC (CMT)</td><td id="Stock_MIC" colspan="10">[Statement]</td>
+      </tr>
+      <tr class="full-width">
+        <td colspan="2" style="background:#002060; color:#fff;">Cathode (MT)</td><td id="Cathode" colspan="10">[Statement]</td>
+      </tr>
+
+      <!-- Achievements -->
+      <tr class="full-width">
+        <td colspan="2" style="text-align:center; background:#002060; color:#fff;">
+          Major Achievements / Highlights (if any):
+        </td>
+        <td style="text-align: center;" id="Statement1" colspan="10">[Statement]</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script>
+  // ─── Utility Functions ────────────────────────────────────────────────
+  // Convert Excel serial number to a JS Date
+  function excelDateToJSDate(serial) {
+    const utcDays = serial - 25569;
+    const ms = utcDays * 86400 * 1000;
+    return new Date(ms);
+  }
+
+  // Format a serial date as "DD-MonthName-YYYY"
+  function formatExcelDate(serial) {
+    const d = excelDateToJSDate(serial);
+    const dd = String(d.getUTCDate()).padStart(2, '0');
+    const monthNames = [
+      'January','February','March','April','May','June',
+      'July','August','September','October','November','December'
+    ];
+    return `${dd}-${monthNames[d.getUTCMonth()]}-${d.getUTCFullYear()}`;
+  }
+
+  // Safely read a cell, returning '' if missing
+  function readCell(sheet, col, row) {
+    const cell = sheet[`${col}${row}`];
+    return cell && cell.v != null ? cell.v : '';
+  }
+  // ───────────────────────────────────────────────────────────────────────
+
+  window.addEventListener('load', async () => {
+    try {
+      // Load workbook
+      const resp = await fetch('https://1drv.ms/x/c/196e8ccf3241c81d/Eajgm41W9LpJmz-rTVYuYVQBwmGU6r6Ky4UEWD6ccui1LQ?e=pg86SZ&nav=MTVfezkyMTFGODkwLTY5NEItNDUwQy05QzI0LUUwQThCNjhGRENFQX0');
+      const buf  = await resp.arrayBuffer();
+      const wb   = XLSX.read(buf, { type: 'array' });
+      const ws   = wb.Sheets[ wb.SheetNames[0] ];
+
+      // ─── Date, Month & FY ──────────────────────────────────────────────
+      const rawSerial = readCell(ws, 'A', 1);
+      const d         = excelDateToJSDate(rawSerial);
+
+      // Month label "July'25"
+      const monthNames1 = [
+        'January','February','March','April','May','June',
+        'July','August','September','October','November','December'
+      ];
+      const twoDigitYr1 = String(d.getUTCFullYear()).slice(-2);
+      const monthLabel1 = `${monthNames1[d.getUTCMonth()]}'${twoDigitYr1}`;
+      document.getElementById('Month1').textContent = monthLabel1;
+
+      // Month label "July'25"
+      const monthNames2 = [
+        'January','February','March','April','May','June',
+        'July','August','September','October','November','December'
+      ];
+      const twoDigitYr2 = String(d.getUTCFullYear()).slice(-2);
+      const monthLabel2 = `${monthNames2[d.getUTCMonth()]}'${twoDigitYr2}`;
+      document.getElementById('Month2').textContent = monthLabel2;
+
+      // Month label "July'25"
+      const monthNames3 = [
+        'January','February','March','April','May','June',
+        'July','August','September','October','November','December'
+      ];
+      const twoDigitYr3 = String(d.getUTCFullYear()).slice(-2);
+      const monthLabel3 = `${monthNames3[d.getUTCMonth()]}'${twoDigitYr3}`;
+      document.getElementById('Month3').textContent = monthLabel3;
+
+      // Current FY (Apr–Mar)
+      let fyStart = d.getUTCFullYear();
+      if (d.getUTCMonth() < 3) fyStart--;
+      const fyEnd     = fyStart + 1;
+      const currentFY = `${fyStart}-${String(fyEnd).slice(-2)}`;
+
+      // Previous FY
+      const previousFY = `${fyStart - 1}-${String(fyStart).slice(-2)}`;
+
+      // Populate FY spans
+      document.querySelectorAll('#Year1').forEach(el => el.textContent = currentFY);
+      document.querySelectorAll('#Year2').forEach(el => el.textContent = previousFY);
+      // ─────────────────────────────────────────────────────────────────────
+
+      // Full dates
+      document.getElementById('Date').textContent     = formatExcelDate(rawSerial);
+      // ─── PROD DATE LOGIC ────────────────────────────────────────────────
+      // read A3 safely
+      const rawProd = readCell(ws, 'A', 3);
+
+      let prodText;
+      if (rawProd) {
+        // if it's a number (Excel serial), format it
+        if (!isNaN(rawProd)) {
+          prodText = formatExcelDate(rawProd);
+        } else {
+          // otherwise assume it's already a human date string
+          prodText = rawProd;
+        }
+      } else {
+        // fallback to “Production on [Date‑1]”
+        const prevSerial = rawSerial - 1;   // rawSerial is A1
+        const prevDate   = formatExcelDate(prevSerial);
+        prodText = `Production on ${prevDate}`;
+      }
+
+      // write into your span
+      document.getElementById('ProdDate').textContent = prodText;
+
+      // ─── ORE rows (4–7) ─────────────────────────────────────────────────
+      ['MCP','KCC','ICC','Total'].forEach((key, idx) => {
+        const r = 4 + idx;
+        document.getElementById(`ORE_${key}_MonthlyTarget`).textContent = readCell(ws, 'C', r);
+        document.getElementById(`ORE_${key}_DailyTarget`).textContent   = readCell(ws, 'D', r);
+        document.getElementById(`ORE_${key}_Actual`).textContent        = readCell(ws, 'E', r);
+        document.getElementById(`ORE_${key}_AsOnTarget`).textContent    = readCell(ws, 'F', r);
+        document.getElementById(`ORE_${key}_PctAchvd`).textContent      = readCell(ws, 'G', r);
+        document.getElementById(`ORE_${key}_CummMonth`).textContent     = readCell(ws, 'H', r);
+        document.getElementById(`ORE_${key}_CummFY`).textContent        = readCell(ws, 'I', r);
+        document.getElementById(`ORE_${key}_TargetFY`).textContent      = readCell(ws, 'J', r);
+        document.getElementById(`ORE_${key}_TotalFY`).textContent       = readCell(ws, 'K', r);
+        document.getElementById(`ORE_${key}_Qtr1`).textContent          = readCell(ws, 'L', r);
+      });
+
+      // ─── MIC rows (8–11) ────────────────────────────────────────────────
+      ['MCP','KCC','ICC','Total'].forEach((key, idx) => {
+        const r = 8 + idx;
+        document.getElementById(`MIC_${key}_MonthlyTarget`).textContent = readCell(ws, 'C', r);
+        document.getElementById(`MIC_${key}_DailyTarget`).textContent   = readCell(ws, 'D', r);
+        document.getElementById(`MIC_${key}_Actual`).textContent        = readCell(ws, 'E', r);
+        document.getElementById(`MIC_${key}_AsOnTarget`).textContent    = readCell(ws, 'F', r);
+        document.getElementById(`MIC_${key}_PctAchvd`).textContent      = readCell(ws, 'G', r);
+        document.getElementById(`MIC_${key}_CummMonth`).textContent     = readCell(ws, 'H', r);
+        document.getElementById(`MIC_${key}_CummFY`).textContent        = readCell(ws, 'I', r);
+        document.getElementById(`MIC_${key}_TargetFY`).textContent      = readCell(ws, 'J', r);
+        document.getElementById(`MIC_${key}_TotalFY`).textContent       = readCell(ws, 'K', r);
+        document.getElementById(`MIC_${key}_Qtr1`).textContent          = readCell(ws, 'L', r);
+      });
+
+      // ─── CCR & PASTE (rows 12–13) ──────────────────────────────────────
+      [['CCR_TCP','TCP'], ['PASTE_MCP','MCP']].forEach((pair, idx) => {
+        const [idBase] = pair;
+        const r        = 12 + idx;
+        ['MonthlyTarget','DailyTarget','Actual','AsOnTarget','PctAchvd','CummMonth','CummFY','TargetFY','TotalFY','Qtr1']
+          .forEach((field, j) => {
+            document.getElementById(`${idBase}_${field}`)
+              .textContent = readCell(ws, String.fromCharCode(67 + j), r);
+          });
+      });
+
+     // ─── SALES DATE LOGIC ────────────────────────────────────────────────
+      // safely read A14
+      const rawSales = readCell(ws, 'A', 14);
+
+      let salesText;
+      if (rawSales) {
+        // if it’s a number, format it; otherwise assume it’s already a date string
+        salesText = !isNaN(rawSales)
+          ? formatExcelDate(rawSales)
+          : rawSales;
+      } else {
+        // fallback to “Sales on Production on [Date‑1]”
+        const prevSerial = rawSerial - 1;    // rawSerial is your A1 value
+        salesText = formatExcelDate(prevSerial);
+        salesText = `Sales on Production on ${salesText}`;
+      }
+      // write into your span
+      document.getElementById('SalesDate').textContent = salesText;
+
+      ['Val1','Val2','Val3','Val4','Val5','Val6','Val7','Val8','Val9','Val10','Val11'].forEach((f,i) => {
+        document.getElementById(`Sales_MIC_${f}`)
+          .textContent = readCell(ws, String.fromCharCode(66 + i), 15);
+      });
+
+      // ─── LME / ExRate / HCL (rows 17–19, cols C–L) ─────────────────────
+      ['LME_Price','ExRate','HCL_Share'].forEach((idBase, idx) => {
+        const r = 17 + idx;
+        ['Val1','Val2','Val3','Val4','Val5','Val6','Val7','Val8','Val9','Val10'].forEach((f,i) => {
+          document.getElementById(`${idBase}_${f}`)
+            .textContent = readCell(ws, String.fromCharCode(67 + i), r);
+        });
+      });
+
+      // ─── Stock & Cathode ───────────────────────────────────────────────
+      document.getElementById('Stock_MIC').textContent = readCell(ws, 'C', 20);
+      document.getElementById('Cathode').textContent   = readCell(ws, 'C', 21);
+
+      // ─── Achievement ────────────────────────────────────────────────────
+      // Read the raw cell
+      const rawStmt = readCell(ws, 'C', 22);
+          
+      // Split into lines, trim out any stray spaces, wrap each in a <p> that’s centered
+      const html = rawStmt
+        .split(/\r?\n/)                    // split on newlines
+        .map(line => line.trim())          // remove leading/trailing spaces
+        .map(line => `<p style="margin:0;text-align:center">${line}</p>`)
+        .join('');
+      
+      // Inject via innerHTML
+      const stmtEl = document.getElementById('Statement1');
+      stmtEl.innerHTML = html;
+
+
+    } catch(err) {
+      console.error('Error loading Data.xlsx:', err);
+    }
+  });
+</script>
+</body>
+</html>
